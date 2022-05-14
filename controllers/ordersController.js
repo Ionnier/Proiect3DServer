@@ -79,3 +79,21 @@ exports.deliveredOrder = async(req, res, next) =>{
         return next(new Error(e))
     }
 }
+
+exports.getDeliverableOrder = async(req, res, next) => {
+    try {
+        const order = await models.orders.findOne({
+            where: {
+                orderStatus: 'Created'
+            }
+        })
+        const product = await models.products.findOne({
+            where: {
+                idProduct: order.idProduct
+            }
+        })
+        res.status(200).json({success: true, data: {order, product}})
+    } catch(e){
+        return next(new Error(e))
+    }
+}
