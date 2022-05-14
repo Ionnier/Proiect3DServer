@@ -22,8 +22,6 @@ exports.startDelivery = async (req, res, next) => {
                 idOrder: req.params.idOrder
             }
         })
-        if (!order || order.orderStatus != "Created")
-            throw "Order not found"
         order.idCurier = req.user.idUser
         order.orderStatus = 'Delivering'
         await order.save()
@@ -53,8 +51,6 @@ exports.deleteOrder = async(req, res, next) =>{
                 idOrder: req.params.idOrder
             }
         })
-        if (!order || order.orderStatus != "Delivering")
-            throw "Order not found"
         order.orderStatus = "Crashed"
         await order.save()
         res.status(200).json({success: true, data: {order}})
@@ -70,8 +66,6 @@ exports.deliveredOrder = async(req, res, next) =>{
                 idOrder: req.params.idOrder
             }
         })
-        if (!order || order.orderStatus != "Delivering")
-            throw "Order not found"
         order.orderStatus = "Delivered"
         await order.save()
         res.status(200).json({success: true, data: {order}})
