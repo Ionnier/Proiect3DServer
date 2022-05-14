@@ -81,6 +81,9 @@ exports.getDeliverableOrder = async(req, res, next) => {
                 orderStatus: 'Created'
             }
         })
+        if (!order) {
+            return next(new Error('No order'))
+        }
         const product = await models.products.findOne({
             where: {
                 idProduct: order.idProduct
