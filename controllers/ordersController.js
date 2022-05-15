@@ -76,20 +76,18 @@ exports.deliveredOrder = async(req, res, next) =>{
 
 exports.getDeliverableOrder = async(req, res, next) => {
     try {
-        const order = await models.orders.findOne({
+        const orders = await models.orders.findAll({
             where: {
                 orderStatus: 'Created'
-            }
+            },
+            include: [
+                {model: models.products, as: 'idProductProduct' }
+            ]
         })
-        if (!order) {
-            return next(new Error('No order'))
+        if (!orders || orders.length == 0) {
+            return next(new Error('No orders'))
         }
-        const product = await models.products.findOne({
-            where: {
-                idProduct: order.idProduct
-            }
-        })
-        res.status(200).json({success: true, data: {order, product}})
+        res.status(200).json({success: true, data: {orders}})
     } catch(e){
         return next(new Error(e))
     }
